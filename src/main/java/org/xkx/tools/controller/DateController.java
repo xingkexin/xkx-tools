@@ -1,6 +1,8 @@
 package org.xkx.tools.controller;
 
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,14 +14,17 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TimeZone;
 
 @RestController
 @RequestMapping("/time")
-@Api(tags = "日期时间")
+@Api(tags = "日期时间", position = 11)
 public class DateController {
 
-	@ApiOperation(value = "获取当前时间", httpMethod = "GET")
+	@ApiOperation(value = "获取当前时间", httpMethod = "GET", position = 11)
 	@RequestMapping("/datetime")
 	public R<Map<String, Object>> getCurrentDate(@ApiParam(value = "时区id") @RequestParam(required = false) String id) {
 		R<Map<String, Object>> r = new R<>();
@@ -37,7 +42,7 @@ public class DateController {
 		return r;
 	}
 
-	@ApiOperation(value = "获取时区", httpMethod = "GET")
+	@ApiOperation(value = "获取时区", httpMethod = "GET", position = 21)
 	@RequestMapping("/timezone")
 	public R<Map<String, Object>> getTimeZone(@ApiParam(value = "时区id") @RequestParam(required = false) String id) {
 		R<Map<String, Object>> r = new R<>();
@@ -52,7 +57,7 @@ public class DateController {
 		return r;
 	}
 
-	@ApiOperation(value = "获取支持的时区列表", httpMethod = "GET")
+	@ApiOperation(value = "获取支持的时区列表", httpMethod = "GET", position = 22)
 	@RequestMapping("/timezone/list")
 	public R<Map<String, Object>> getTimeZoneList() {
 		R<Map<String, Object>> r = new R<>();
@@ -64,7 +69,7 @@ public class DateController {
 		return r;
 	}
 
-	@ApiOperation(value = "获取支持的语言列表", httpMethod = "GET")
+	@ApiOperation(value = "获取当前语言环境", httpMethod = "GET", position = 31)
 	@RequestMapping("/locale")
 	public R<Map<String, Object>> getLocale() {
 		R<Map<String, Object>> r = new R<>();
@@ -78,7 +83,7 @@ public class DateController {
 		return r;
 	}
 
-	@ApiOperation(value = "获取支持的语言列表", httpMethod = "GET")
+	@ApiOperation(value = "获取支持的语言列表", httpMethod = "GET", position = 32)
 	@RequestMapping("/locale/list")
 	public R<Map<String, Object>> getLocaleList() {
 		R<Map<String, Object>> r = new R<>();

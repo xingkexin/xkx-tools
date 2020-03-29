@@ -3,9 +3,11 @@ package org.xkx.tools.controller;
 import cn.hutool.core.net.URLEncoder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.UnsupportedEncodingException;
@@ -16,12 +18,13 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("url")
-@Api(tags = "URL编解码")
+@Api(tags = "URL编解码", position = 21)
 public class UrlController {
 
-	@ApiOperation(value = "智能编码")
+	@ApiOperation(value = "智能编码", position = 11)
 	@PostMapping("encode/smart")
-	public String encodeBySmart(String str, String charsetStr) {
+	public String encodeBySmart(@ApiParam(value = "字符串", required = true) @RequestParam String str,
+	                            @ApiParam(value = "字符集", required = true, defaultValue = "UTF-8") @RequestParam String charsetStr) {
 		if (StringUtils.isBlank(str)) {
 			return "";
 		}
@@ -69,9 +72,10 @@ public class UrlController {
 		}
 	}
 
-	@ApiOperation(value = "2 直接编码")
+	@ApiOperation(value = "直接编码", position = 12)
 	@PostMapping("encode/direct")
-	public String encodeByDirect(String str, String charsetStr) {
+	public String encodeByDirect(@ApiParam(value = "字符串", required = true) @RequestParam String str,
+	                             @ApiParam(value = "字符集", required = true, defaultValue = "UTF-8") @RequestParam String charsetStr) {
 		if (StringUtils.isBlank(str)) {
 			return "";
 		}
@@ -84,9 +88,10 @@ public class UrlController {
 		}
 	}
 
-	@ApiOperation(value = "3 解码")
+	@ApiOperation(value = "解码", position = 13)
 	@PostMapping("decode")
-	public String decode(String str, String charsetStr) {
+	public String decode(@ApiParam(value = "字符串", required = true) @RequestParam String str,
+	                     @ApiParam(value = "字符集", required = true, defaultValue = "UTF-8") @RequestParam String charsetStr) {
 		if (StringUtils.isBlank(str)) {
 			return "";
 		}
