@@ -1,2 +1,22 @@
 server:
   port: 8080
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    name: FirstDataSource
+    url: mpw:jXTNmjxnBITgoNaq/4OITuAvJ5bkjuLzTdQR2UkbRLSJQdmtCZEe+N+E5CoDGOwtJeXJZDdsyhZ8UZs6BGCEGX+G2CgmR/hLZWj8HBUWSB2XhpcLruFJq8JwOvyWp3O0b2KIY5+0m07kCuoced6m80lxYrj2b04/tV7W5wKk5F5U6FKKWf/ec/DgciZP7NwtzwJSJnyxhvcZpywAFpbI1BJoAyYILyUG/CLr7Fk7kfNFn9rsSsC6Ov9SFt+9Wc6bvXsrg+0X8ZQGqDH/DqZ0XGRbxqrEo8sNgtChiS0DBFzTv6Y6EZwXwuS4h1lS1G8GwpaVc2jXf8BIlx9K8epnFQ==
+    username: mpw:bOfL8DYIFIU0Asgdfiq+sg==
+    password: mpw:CmOo8r7KGFh41tpCSv34Bg==
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20

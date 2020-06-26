@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.xkx.tools.dao.WebsiteDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.xkx.tools.domain.Website">
+        <id column="id" property="id" />
+        <result column="webste_folder_id" property="websteFolderId" />
+        <result column="website_name" property="websiteName" />
+        <result column="website_url" property="websiteUrl" />
+        <result column="website_sort" property="websiteSort" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, webste_folder_id, website_name, website_url, website_sort, create_time, update_time
+    </sql>
+
+</mapper>
