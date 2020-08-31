@@ -1,44 +1,83 @@
 package org.xkx.tools.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.xkx.tools.base.R;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
+import java.time.temporal.TemporalField;
+import java.time.temporal.WeekFields;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+@Slf4j
 @RestController
 @RequestMapping("/time")
 @Api(tags = "日期时间", position = 11)
 public class DateController {
 
-	@ApiOperation(value = "获取当前时间", httpMethod = "GET", position = 11)
+	@ApiOperation(value = "获取日期时间", httpMethod = "GET", position = 11)
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "type", value = "日期类型，date代表yyyy-MM-dd格式，datetime代表yyyy-MM-dd HH:mm:ss，timestamp代表毫秒时间戳", required = false, dataType = "String", paramType = "form"),
+			@ApiImplicitParam(name = "val", value = "需要格式化的值，格式取决于type参数，不传值代表当前时间。", required = false, dataType = "String", paramType = "form"),
+			@ApiImplicitParam(name = "zoneId", value = "时区id，不传值代表当前服务器所属时区", required = false, dataType = "String", paramType = "form")
+	})
 	@RequestMapping("/datetime")
-	public R<Map<String, Object>> getCurrentDate(@ApiParam(value = "时区id") @RequestParam(required = false) String id) {
+	public R<Map<String, Object>> getDate(String type, String val, String zoneId) {
 		R<Map<String, Object>> r = new R<>();
 		Map<String, Object> data = new LinkedHashMap<>();
 
-		Instant instant = Instant.now();
-		ZoneId zoneId = getZoneIdByDefault(id);
-		LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, zoneId);
-		DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
-		data.put("datetime", df.format(localDateTime));
-		data.put("timestamp", instant.toEpochMilli());
-		data.put("zoneId", zoneId.getId());
-		r.setData(data);
+		LocalDateTime localDateTime;
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+		ZoneId zone = getZoneIdByDefault(zoneId);
+		if(StringUtils.isNotBlank(val)) {
+			try {
+				if("date".equals(type)) {
+					LocalDate localDate = LocalDate.parse(val, dateFormatter);
+					localDateTime = LocalDateTime.of(localDate, LocalTime.MIDNIGHT);
+				}else if("datetime".equals(type)) {
+					localDateTime = LocalDateTime.parse(val, dateTimeFormatter);
+				}else if("timestamp".equals(type)) {
+					long timestamp = NumberUtils.toLong(val, 0);
+					localDateTime = Instant.ofEpochMilli(timestamp).atZone(zone).toLocalDateTime();
+				} else {
+					localDateTime = LocalDateTime.now(zone);
+				}
+			} catch (Exception e) {
+				log.error("出错喽！", e);
+				r.error("999", "别瞎搞哦！");
+				return r;
+			}
+		}else {
+			localDateTime = LocalDateTime.now(zone);
+		}
 
+		ZonedDateTime zonedDateTime = localDateTime.atZone(zone);
+		Instant instant = zonedDateTime.toInstant();
+		WeekFields weekFields = WeekFields.of(DayOfWeek.MONDAY, 1);
+		data.put("zoneId", zone.getId());
+		data.put("zoneOffset", zonedDateTime.getOffset().getId());
+		data.put("timestamp", instant.toEpochMilli());
+		data.put("date", localDateTime.format(dateFormatter));
+		data.put("time", localDateTime.format(timeFormatter));
+		data.put("datetime", localDateTime.format(dateTimeFormatter));
+		data.put("dayOfWeek", localDateTime.getDayOfWeek().getValue());
+		data.put("dayOfYear", localDateTime.getDayOfYear());
+		data.put("weekOfMonth", localDateTime.get(weekFields.weekOfMonth()));
+		data.put("weekOfYear", localDateTime.get(weekFields.weekOfYear()));
+
+		r.setData(data);
 		return r;
 	}
 
