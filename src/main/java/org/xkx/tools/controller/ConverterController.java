@@ -55,7 +55,9 @@ public class ConverterController {
 					default: codePoint = codePoint * 16 + (c - 48);break;
 				}
 			}
-			sb.append(Character.toChars(codePoint));
+			if(codePoint >= Character.MIN_CODE_POINT && codePoint <= Character.MAX_CODE_POINT) {
+				sb.appendCodePoint(codePoint);
+			}
 		}
 		return sb.toString();
 	}
