@@ -8,11 +8,11 @@ public class NumberUtils {
 	 * @param baseNum 进制规则，取值为：2、8、10、16
 	 * @return
 	 */
-	public static long toNumber(String str, int baseNum) {
+	public static long parseNumber(String str, int baseNum) {
 		long num = 0;
 		str = str.replaceAll("[ ,]", "");
 		for(char c : str.toCharArray()) {
-			num = num * baseNum + toUnitNumber(c);
+			num = num * baseNum + parseUnitNumber(c);
 		}
 		return num;
 	}
@@ -23,12 +23,12 @@ public class NumberUtils {
 	 * @param baseNum 进制规则
 	 * @return
 	 */
-	public static String toOtherNumber(long num, int baseNum) {
+	public static String formatNumber(long num, int baseNum) {
 		StringBuilder sb = new StringBuilder();
 		StringBuilder sb2 = new StringBuilder();
 
 		while (num != 0) {
-			sb.append(toOtherUnitNumber((int) (num%baseNum)));
+			sb.append(formatUnitNumber((int) (num%baseNum)));
 			num = num/baseNum;
 		}
 		for(int i=sb.length()-1; i>=0; i--) {
@@ -45,11 +45,11 @@ public class NumberUtils {
 	 * @param targetBaseNum 目标进制
 	 * @return
 	 */
-	public static String toOtherNumber(String str, int originalBaseNum, int targetBaseNum) {
-		return toOtherNumber(toNumber(str, originalBaseNum), targetBaseNum);
+	public static String convertNumber(String str, int originalBaseNum, int targetBaseNum) {
+		return formatNumber(parseNumber(str, originalBaseNum), targetBaseNum);
 	}
 
-	public static String toOtherUnitNumber(int num) {
+	public static String formatUnitNumber(int num) {
 		if(num >= 16 || num < 0) return "";
 		switch(num) {
 			case 10: return "a";
@@ -62,7 +62,7 @@ public class NumberUtils {
 		}
 	}
 
-	public static int toUnitNumber(char c) {
+	public static int parseUnitNumber(char c) {
 		switch(c) {
 			case 'a': return 10;
 			case 'b': return 11;
@@ -76,14 +76,14 @@ public class NumberUtils {
 
 	public static void main(String[] args) {
 		long num = 55296;
-		System.out.println(toOtherNumber(num, 2));
-		System.out.println(toOtherNumber(num, 8));
-		System.out.println(toOtherNumber(num, 10));
-		System.out.println(toOtherNumber(num, 16));
-		System.out.println(toNumber("111111111111111111111111 11111111", 2));
-		System.out.println(toNumber("37777777777", 8));
-		System.out.println(toNumber("4,294,967,295", 10));
-		System.out.println(toNumber("d800", 16));
-		System.out.println(toOtherNumber("d800", 16, 2));
+		System.out.println(formatNumber(num, 2));
+		System.out.println(formatNumber(num, 8));
+		System.out.println(formatNumber(num, 10));
+		System.out.println(formatNumber(num, 16));
+		System.out.println(parseNumber("111111111111111111111111 11111111", 2));
+		System.out.println(parseNumber("37777777777", 8));
+		System.out.println(parseNumber("4,294,967,295", 10));
+		System.out.println(parseNumber("d800", 16));
+		System.out.println(convertNumber("d800", 16, 2));
 	}
 }
